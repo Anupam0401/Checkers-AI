@@ -32,8 +32,6 @@ Funcitonalities include:
 - Automatic check for and end game.
 
 - A silky smoooth 60 FPS!
-
-Everest Witman - May 2014 - Marlboro College - Programming Workshop
 """
 
 import pygame, sys
