@@ -328,7 +328,6 @@ class Bot:
                         step_value = self._current_eval(board_clone)
                         self.color, self.adversary_color = self.adversary_color, self.color
                         self.game.turn = self.color
-                        # print('max->', depth, step_value, (pos[0], pos[1]), action, self.color)
                         if step_value > max_value:
                             max_value = step_value
                             best_pos = pos
