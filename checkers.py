@@ -168,8 +168,8 @@ class Game:
 		"""
 		Checks to see if a player has run out of moves or pieces. If so, then return True. Else return False.
 		"""
-		for x in range(8):
-			for y in range(8):
+		for x in range(4):
+			for y in range(4):
 				if self.board.location(x, y).color == BLACK and self.board.location(x, y).occupant != None and self.board.location(x, y).occupant.color == self.turn:
 					if self.board.legal_moves(x, y) != []:
 						return False
@@ -218,16 +218,16 @@ class Graphics:
 		"""
 		Takes a board object and draws all of its squares to the display
 		"""
-		for x in range(8):
-			for y in range(8):
+		for x in range(4):
+			for y in range(4):
 				pygame.draw.rect(self.screen, board[x][y].color, (x * self.square_size, y * self.square_size, self.square_size, self.square_size), )
 
 	def draw_board_pieces(self, board):
 		"""
 		Takes a board object and draws all of its pieces to the display
 		"""
-		for x in range(8):
-			for y in range(8):
+		for x in range(4):
+			for y in range(4):
 				if board.matrix[x][y].occupant != None:
 					pygame.draw.circle(self.screen, board.matrix[x][y].occupant.color, tuple(map(int, self.pixel_coords((x, y)))), int(self.piece_size))
 
@@ -282,12 +282,12 @@ class Board:
 
 		# initialize squares and place them in matrix
 
-		matrix = [[None] * 8 for i in range(8)]
+		matrix = [[None] * 4 for i in range(4)]
 
 		# The following code block has been adapted from
 		# http://itgirl.dreamhosters.com/itgirlgames/games/Program%20Leaders/ClareR/Checkers/checkers.py
-		for x in range(8):
-			for y in range(8):
+		for x in range(4):
+			for y in range(4):
 				if (x % 2 != 0) and (y % 2 == 0):
 					matrix[y][x] = Square(WHITE)
 				elif (x % 2 != 0) and (y % 2 != 0):
@@ -299,11 +299,11 @@ class Board:
 
 		# initialize the pieces and put them in the appropriate squares
 
-		for x in range(8):
-			for y in range(3):
+		for x in range(4):
+			for y in range(1):
 				if matrix[x][y].color == BLACK:
 					matrix[x][y].occupant = Piece(RED)
-			for y in range(5, 8):
+			for y in range(3, 4):
 				if matrix[x][y].color == BLACK:
 					matrix[x][y].occupant = Piece(BLUE)
 
@@ -314,10 +314,10 @@ class Board:
 		Takes a board and returns a matrix of the board space colors. Used for testing new_board()
 		"""
 
-		board_string = [[None] * 8] * 8
+		board_string = [[None] * 4] * 4
 
-		for x in range(8):
-			for y in range(8):
+		for x in range(4):
+			for y in range(4):
 				if board[x][y].color == WHITE:
 					board_string[x][y] = "WHITE"
 				else:
@@ -458,7 +458,7 @@ class Board:
 		False
 		"""
 
-		if coords[1] == 0 or coords[1] == 7:
+		if coords[1] == 0 or coords[1] == 3:
 			return True
 		else:
 			return False
@@ -481,7 +481,7 @@ class Board:
 		False
 		"""
 
-		if x < 0 or y < 0 or x > 7 or y > 7:
+		if x < 0 or y < 0 or x > 3 or y > 3:
 			return False
 		else:
 			return True
@@ -497,8 +497,8 @@ class Board:
 				self.location(x, y).occupant.crown()
 
 	def repr_matrix(self):
-		for j in range(8):
-			for i in range(8):
+		for j in range(4):
+			for i in range(4):
 				if self.matrix[i][j].occupant is not None:
 					if self.matrix[i][j].occupant.color == BLUE:
 						print('B', end=" ")
