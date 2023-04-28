@@ -7,6 +7,7 @@ import math
 from time import sleep
 pygame.font.init()
 import checkers
+import json
 
 
 ##COLORS##
@@ -54,6 +55,66 @@ class Bot:
         self._current_eval = self._mid_eval
         self._end_eval_time = False
         self._count_nodes = 0
+        self.policy = {}
+        self._load_policy()
+
+    def _load_policy(self):
+        with open('policy_iteration_data.json') as json_file:
+            temp = json.load(json_file)
+        
+        # "(('X', 'X', 'KB', 'X'), ('X', 'KR', 'X', 'KR'), ('B', 'X', 'X', 'X'), ('X', 'X', 'X', 'X'))": 'None'
+        for key in temp.keys():
+            policy_key = self.convertStringToMatrixTuple(key)
+            # print(policy_key)
+            policy_val = self.convertStringToMoveTuple(temp[key])
+            # print(policy_val)
+            self.policy[policy_key] = policy_val
+
+    def convertStringToMoveTuple(self,val):
+        # "[(2, 2), (3, 1)]"
+        if val=="None":
+            return None
+        temp = []
+        valStr = ""
+        for c in val:
+            if c not in ['(', ')', '[',']',' ']:
+                valStr += c
+
+        temp = valStr.split(',')
+        move = [tuple(int(x) for x in temp[0:2]), tuple(int(x) for x in temp[2:4])]
+        return move
+
+        
+    def convertStringToMatrixTuple(self, key):
+        # key = "(('X', 'X', 'KB', 'X'), ('X', 'KR', 'X', 'KR'), ('B', 'X', 'X', 'X'), ('X', 'X', 'X', 'X'))"
+        temp = []
+        keyStr = ""
+        for c in key:
+            if c in ['X', 'K', 'B', 'R']:
+                keyStr += c
+        # print(key)
+        # print(keyStr)
+        count = 0
+        skip = False
+        for i in range(len(keyStr)):
+            if skip:
+                skip = False
+                continue
+
+            if count % 4 == 0:
+                temp.append([])
+            if keyStr[i]=='X' or keyStr[i]=='B' or keyStr[i]=='R':
+                temp[count//4].append(str(keyStr[i]))
+                count += 1
+            else:
+                temp[count//4].append(str(keyStr[i])+str(keyStr[i+1]))
+                skip = True
+                count += 1
+
+        # print(temp)
+        return tuple(tuple(x) for x in temp)
+
+
 
     def step(self, board, return_count_nodes=False):
         self._count_nodes = 0
@@ -68,6 +129,8 @@ class Bot:
             self._minmax_step(board)
         elif self.method == 'alpha_beta':
             self._alpha_beta_step(board)
+        elif self.method == 'policy_iteration':
+            self._mdp_step(board)
         if return_count_nodes:
             return self._count_nodes
 
@@ -240,13 +303,13 @@ class Bot:
         return 0
 
 
-    def _mdp_step(self, board):
-        # read the policy from the file policy_iteration_data.txt
-        # policy is in string format
-        with open('policy_iteration_data.txt', 'r') as f:
-            policy = json.load(f)
-
-        self._action(random_move, rand_choice, board)
+    def _mdp_step(self,board):
+        if board.getMatrixAsTuple() not in self.policy or self.policy[board.getMatrixAsTuple()] == None:
+            print("Using Random")
+            self._random_step(board)
+        else:
+            print("Using Policy")
+            self._action(self.policy[board.getMatrixAsTuple()][0], self.policy[board.getMatrixAsTuple()][1], board)
         return
     
     def _random_step(self, board):

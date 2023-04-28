@@ -3,6 +3,7 @@ import checkers
 import seaborn as sns
 import matplotlib.pyplot as plt
 from copy import deepcopy
+import json
 
 ##COLORS##
 #             R    G    B
@@ -95,15 +96,27 @@ def value_iteration():
         # Update value functions
         V = V_new
 
+        V_str = {}
+        for key in V:
+            V_str[str(key)] = str(V[key])
+        
+        pi_str = {}
+        for key in pi:
+            pi_str[str(key)] = str(pi[key])
 
-        # add the data of V to a file for plotting by clearing the file and appending the data on each iteration
+        # add the data of V to a file in JSON format by clearing the file and appending the data on each iteration 
         with open('value_iteration_data.txt', 'w') as f:
-            f.write(str(V) + '\n')
+            f.write(str(V_str) + '\n')
             
+        with open("value_iteration_data.json", "w") as outfile:
+            json.dump(V_str, outfile)
 
-        # add the data of pi to a file for plotting and append the data on each iteration
-        with open('policy_iteration_data.txt', 'a') as f:
-            f.write(str(pi) + '\n')
+        # add the data of pi to a file
+        with open('policy_iteration_data.txt', 'w') as f:
+            f.write(str(pi_str )+ '\n')
+
+        with open("policy_iteration_data.json", "w") as outfile:
+            json.dump(pi_str, outfile)
 
         # generate heatmap
         # sns.heatmap(V, annot=True, fmt='.2f', cmap='Blues')
@@ -115,4 +128,5 @@ def value_iteration():
         if max_diff < delta:
             break
     
-value_iteration()
+# value_iteration()
+bot._mdp_step()
