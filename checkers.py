@@ -176,7 +176,6 @@ class Game:
 
 		return True
 
-	# def generate_all_states(self):
 	
 
 class Graphics:
@@ -381,22 +380,23 @@ class Board:
 		Returns a list of blind legal move locations from a set of coordinates (x,y) on the board.
 		If that location is empty, then blind_legal_moves() return an empty list.
 		"""
-		 #print(x)
+		# print("in blind_legal_moves")
+		
 		if self.matrix[x][y].occupant != None:
 
 			if self.matrix[x][y].occupant.king == False and self.matrix[x][y].occupant.color == BLUE:
-				blind_legal_moves = [self.rel(NORTHWEST, x, y), self.rel(NORTHEAST, x, y)]
+				blind_legal_moves_list = [self.rel(NORTHWEST, x, y), self.rel(NORTHEAST, x, y)]
 
 			elif self.matrix[x][y].occupant.king == False and self.matrix[x][y].occupant.color == RED:
-				blind_legal_moves = [self.rel(SOUTHWEST, x, y), self.rel(SOUTHEAST, x, y)]
+				blind_legal_moves_list = [self.rel(SOUTHWEST, x, y), self.rel(SOUTHEAST, x, y)]
 
 			else:
-				blind_legal_moves = [self.rel(NORTHWEST, x, y), self.rel(NORTHEAST, x, y), self.rel(SOUTHWEST, x, y), self.rel(SOUTHEAST, x, y)]
+				blind_legal_moves_list = [self.rel(NORTHWEST, x, y), self.rel(NORTHEAST, x, y), self.rel(SOUTHWEST, x, y), self.rel(SOUTHEAST, x, y)]
 
 		else:
-			blind_legal_moves = []
+			blind_legal_moves_list = []
 
-		return blind_legal_moves
+		return blind_legal_moves_list
 
 	def legal_moves(self, x, y, hop = False):
 		"""
@@ -404,27 +404,28 @@ class Board:
 		If that location is empty, then legal_moves() returns an empty list.
 		"""
 		 #print(x, y)
-		blind_legal_moves = self.blind_legal_moves(x, y)
+		blind_legal_moves_list = self.blind_legal_moves(x, y)
 		# print('BLind Legal moves', blind_legal_moves)
-		legal_moves = []
+		# print(type(self),x, y)
+		legal_moves_list = []
 
 		if hop == False:
-			for move in blind_legal_moves:
+			for move in blind_legal_moves_list:
 				if hop == False:
 					if self.on_board(move[0], move[1]):
 						if self.location(move[0], move[1]).occupant == None:
-							legal_moves.append(move)
+							legal_moves_list.append(move)
 
 						elif self.location(move[0], move[1]).occupant.color != self.location(x, y).occupant.color and self.on_board(move[0] + (move[0] - x), move[1] + (move[1] - y)) and self.location(move[0] + (move[0] - x), move[1] + (move[1] - y)).occupant == None: # is this location filled by an enemy piece?
-							legal_moves.append((move[0] + (move[0] - x), move[1] + (move[1] - y)))
+							legal_moves_list.append((move[0] + (move[0] - x), move[1] + (move[1] - y)))
 
 		else: # hop == True
-			for move in blind_legal_moves:
+			for move in blind_legal_moves_list:
 				if self.on_board(move[0], move[1]) and self.location(move[0], move[1]).occupant != None:
 					if self.location(move[0], move[1]).occupant.color != self.location(x, y).occupant.color and self.on_board(move[0] + (move[0] - x), move[1] + (move[1] - y)) and self.location(move[0] + (move[0] - x), move[1] + (move[1] - y)).occupant == None: # is this location filled by an enemy piece?
-						legal_moves.append((move[0] + (move[0] - x), move[1] + (move[1] - y)))
+						legal_moves_list.append((move[0] + (move[0] - x), move[1] + (move[1] - y)))
 
-		return legal_moves
+		return legal_moves_list
 
 	def remove_piece(self, x, y):
 		"""
@@ -504,12 +505,42 @@ class Board:
 			for i in range(4):
 				if self.matrix[i][j].occupant is not None:
 					if self.matrix[i][j].occupant.color == BLUE:
-						print('B', end=" ")
+						if self.matrix[i][j].occupant.king:
+							print('KB', end=" ")
+						else:
+							print('B', end=" ")
 					else:
-						print('R', end=" ")
+						if self.matrix[i][j].occupant.king:
+							print('KR', end=" ")
+						else:
+							print('R', end=" ")
 				else:
 					print('X', end=" ")
 			print('')
+
+	def getMatrixAsTuple(self):
+		curMatrix = []
+		for j in range(4):
+			curMatrix.append([])
+			for i in range(4):
+				if self.matrix[i][j].occupant is not None:
+					if self.matrix[i][j].occupant.color == BLUE:
+						if self.matrix[i][j].occupant.king:
+							curMatrix[j].append('KB')
+						else:
+							curMatrix[j].append('B')
+						# print('B', end=" ")
+					else:
+						if self.matrix[i][j].occupant.king:
+							curMatrix[j].append('KR')
+						else:
+							curMatrix[j].append('R')
+						# print('R', end=" ")
+				else:
+					curMatrix[j].append('X')
+					# print('X', end=" ")
+			# print('')
+		return tuple(tuple(row) for row in curMatrix)
 
 class Piece:
 	def __init__(self, color, king = False):

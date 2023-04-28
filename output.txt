@@ -1,0 +1,4 @@
+pygame 2.3.0 (SDL 2.24.2, Python 3.7.6)
+Hello from the pygame community. https://www.pygame.org/contribute.html
+4029
+Iteration:  0 Max diff:  10000

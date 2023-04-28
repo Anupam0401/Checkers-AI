@@ -6,6 +6,7 @@ from copy import deepcopy
 import math
 from time import sleep
 pygame.font.init()
+import checkers
 
 
 ##COLORS##
@@ -118,6 +119,7 @@ class Bot:
         if self.game.hop != True:
             self.game.turn = self.adversary_color
 
+
     def _action_on_board(self, board, current_pos, final_pos, hop=False):
         if hop == False:
             if board.location(final_pos[0], final_pos[1]).occupant != None and board.location(final_pos[0], final_pos[1]).occupant.color == self.game.turn:
@@ -167,7 +169,86 @@ class Bot:
                     possible_moves.append(
                         (i, j, board.legal_moves(i, j, self.game.hop)))
         return possible_moves
+    
 
+    def generate_all_states(self,board):
+		# DFS to generate all states
+        all_states = set()
+        all_states_tuple = set()
+        stack = []
+        stack.append(board)
+        while stack:
+            current_board = stack.pop()
+            all_states.add(current_board)
+            all_states_tuple.add(current_board.getMatrixAsTuple())
+            self.game.turn = BLUE
+            all_moves = []
+            for piece_moves in self._generate_all_possible_moves(current_board):
+                current_pos = piece_moves[0:2]
+                for final_pos in piece_moves[2]:
+                    all_moves.append([current_pos,final_pos])
+            for move in all_moves:
+                new_board = deepcopy(current_board)
+                self._action(move[0], move[1], new_board) 
+                self.game.turn = RED
+                opponent_piece_moves = self._generate_all_possible_moves(new_board)
+                self.game.turn = BLUE
+                opponent_moves = []
+                for piece_moves in opponent_piece_moves:
+                    current_pos = piece_moves[0:2]
+                    for final_pos in piece_moves[2]:
+                        opponent_moves.append([current_pos,final_pos])
+
+                for opponent_move in opponent_moves:
+                    s_next = deepcopy(new_board)
+                    self._action(opponent_move[0], opponent_move[1], s_next)
+                    if s_next.getMatrixAsTuple() not in all_states_tuple:
+                        stack.append(s_next)
+        return all_states
+    
+    def check_for_endgame(self,board: checkers.Board):
+        """
+		Checks to see if a player has run out of moves or pieces. If so, then return True. Else return False.
+		"""
+        for x in range(4):
+            for y in range(4):
+                if board.location(x, y).color == BLACK and board.location(x, y).occupant != None and board.location(x, y).occupant.color == self.game.turn:
+                    # print(x,y)
+                    if board.legal_moves(x, y) != []:
+                        return False
+
+        return True
+
+    def reward(self, board: checkers.Board):
+        self.game.turn = BLUE
+        if self.check_for_endgame(board):
+           return -10000
+        else:
+            all_moves = []
+            for piece_moves in self._generate_all_possible_moves(board):
+                current_pos = piece_moves[0:2]
+                for final_pos in piece_moves[2]:
+                    all_moves.append([current_pos,final_pos])
+            for move in all_moves:
+                new_board = deepcopy(board)
+                self._action(move[0], move[1], new_board)
+                self.game.turn = RED
+                if self.check_for_endgame(new_board):
+                    self.game.turn = BLUE
+                    return 10000
+                self.game.turn = BLUE
+        return 0
+
+
+    def _mdp_step(self, board):
+        # read the policy from the file policy_iteration_data.txt
+        # policy is in string format
+        with open('policy_iteration_data.txt', 'r') as f:
+            policy = json.load(f)
+
+        self._action(random_move, rand_choice, board)
+        return
+    
     def _random_step(self, board):
         possible_moves = self._generate_all_possible_moves(board)
         if possible_moves == []:
