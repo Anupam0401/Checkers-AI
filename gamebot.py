@@ -154,15 +154,15 @@ class Bot:
                     self._action_on_board(board, current_pos, final_pos[0],hop=True)
 
     def _generate_move(self, board):
-        for i in range(8):
-            for j in range(8):
+        for i in range(4):
+            for j in range(4):
                 if(board.legal_moves(i, j, self.game.hop) != [] and board.location(i, j).occupant != None and board.location(i, j).occupant.color == self.game.turn):
                     yield (i, j, board.legal_moves(i, j, self.game.hop))
 
     def _generate_all_possible_moves(self, board):
         possible_moves = []
-        for i in range(8):
-            for j in range(8):
+        for i in range(4):
+            for j in range(4):
                 if(board.legal_moves(i, j, self.game.hop) != [] and board.location(i, j).occupant != None and board.location(i, j).occupant.color == self.game.turn):
                     possible_moves.append(
                         (i, j, board.legal_moves(i, j, self.game.hop)))
@@ -466,8 +466,8 @@ class Bot:
 
     def _piece2val(self, board):
         score = 0
-        for i in range(8):
-            for j in range(8):
+        for i in range(4):
+            for j in range(4):
                 occupant = board.location(i, j).occupant
                 if(occupant is not None):
                     if(occupant.color == self.eval_color):
@@ -479,21 +479,21 @@ class Bot:
     def _piece_and_row2val(self, board):
         score = 0
         if(self.eval_color == RED):
-            for i in range(8):
-                for j in range(8):
+            for i in range(4):
+                for j in range(4):
                     occupant = board.location(i, j).occupant
                     if(occupant is not None):
                         if occupant.color == self.eval_color:
                             score += 5 + j + 2 * (occupant.king)
                         else:
-                            score -= 5 + (8 - j) + 2 * (occupant.king)
+                            score -= 5 + (4 - j) + 2 * (occupant.king)
         else:
-            for i in range(8):
-                for j in range(8):
+            for i in range(4):
+                for j in range(4):
                     occupant = board.location(i, j).occupant
                     if(occupant is not None):
                         if occupant.color == self.eval_color:
-                            score += 5 + (8 - j) + 2 * (occupant.king)
+                            score += 5 + (4 - j) + 2 * (occupant.king)
                         else:
                             score -= 5 + j + 2 * (occupant.king)
         return score
@@ -501,8 +501,8 @@ class Bot:
     def _piece_and_board2val(self, board):
         score = 0
         if(self.eval_color == RED):
-            for i in range(8):
-                for j in range(8):
+            for i in range(4):
+                for j in range(4):
                     occupant = board.location(i, j).occupant
                     if(occupant is not None):
                         if occupant.color == self.eval_color and occupant.king:
@@ -518,8 +518,8 @@ class Bot:
                         elif occupant.color != self.eval_color and j >= 4:
                             score -= 5
         else:
-            for i in range(8):
-                for j in range(8):
+            for i in range(4):
+                for j in range(4):
                     occupant = board.location(i, j).occupant
                     if(occupant is not None):
                         if occupant.color == self.eval_color and occupant.king:
@@ -540,8 +540,8 @@ class Bot:
         score = 0
         num_pieces = 0
         if(self.eval_color == RED):
-            for i in range(8):
-                for j in range(8):
+            for i in range(4):
+                for j in range(4):
                     occupant = board.location(i, j).occupant
                     if(occupant is not None):
                         num_pieces += 1
@@ -558,8 +558,8 @@ class Bot:
                         elif occupant.color != self.eval_color and j >= 4:
                             score -= 5
         else:
-            for i in range(8):
-                for j in range(8):
+            for i in range(4):
+                for j in range(4):
                     occupant = board.location(i, j).occupant
                     if(occupant is not None):
                         num_pieces += 1
@@ -578,8 +578,8 @@ class Bot:
         return score / num_pieces
 
     def _all_kings(self, board):
-        for i in range(8):
-            for j in range(8):
+        for i in range(4):
+            for j in range(4):
                 occupant = board.location(i, j).occupant
                 if(occupant is not None and occupant.king == False):
                     return False
@@ -591,8 +591,8 @@ class Bot:
     def _pieces_loc(self, board):
         player_pieces = []
         adversary_pieces = []
-        for i in range(8):
-            for j in range(8):
+        for i in range(4):
+            for j in range(4):
                 occupant = board.location(i, j).occupant
                 if(occupant is not None):
                     if(occupant.color == self.eval_color):
@@ -622,8 +622,8 @@ class Bot:
         return farthest_dist
 
     def _check_for_endgame(self, board):
-        for x in range(8):
-            for y in range(8):
+        for x in range(4):
+            for y in range(4):
                 if board.location(x, y).color == BLACK and board.location(x, y).occupant != None and board.location(x, y).occupant.color == self.game.turn:
                     if board.legal_moves(x, y) != []:
                         return False

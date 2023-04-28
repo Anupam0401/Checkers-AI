@@ -34,9 +34,9 @@ def main():
                 game.update()
             else:
                 # TO start player's turn uncomment the below line and comment a couple  of line below than that
-                game.player_turn()
-                # count_nodes = bot.step(game.board, True)
-                # print('Total nodes explored in this step are', count_nodes)
+                # game.player_turn()
+                count_nodes = bot.step(game.board, True)
+                print('Total nodes explored in this step are', count_nodes)
                 game.update()
             if game.endit:
                 break

@@ -176,6 +176,9 @@ class Game:
 
 		return True
 
+	# def generate_all_states(self):
+	
+
 class Graphics:
 	def __init__(self):
 		self.caption = "Checkers"
@@ -493,7 +496,7 @@ class Board:
 		If it meets the criteria, then king() kings the piece in that square and kings it.
 		"""
 		if self.location(x, y).occupant != None:
-			if (self.location(x, y).occupant.color == BLUE and y == 0) or (self.location(x, y).occupant.color == RED and y == 7):
+			if (self.location(x, y).occupant.color == BLUE and y == 0) or (self.location(x, y).occupant.color == RED and y == 3):
 				self.location(x, y).occupant.crown()
 
 	def repr_matrix(self):
