@@ -121,12 +121,12 @@ def value_iteration():
         # generate heatmap
         # sns.heatmap(V, annot=True, fmt='.2f', cmap='Blues')
         # plt.show()
-        print("Iteration: ", i, "Max diff: ", max_diff)
+        print("Iteration: ", i, ">> Max diff: ", max_diff)
 
 
         # If diff smaller than threshold delta for all states, algorithm terminates
         if max_diff < delta:
             break
     
-# value_iteration()
-bot._mdp_step()
+value_iteration()
+# bot._mdp_step()
