@@ -34,5 +34,5 @@ This repos has been taken from the [Droughts-AI repo](https://github.com/Hsankes
 
 Found a bug? Create an **[issue](https://github.com/Hsankesara/Draughts-AI/issues/new)**.
 
-**Refer to this reposrt for detailed information on the project:** [embed]https://github.com/Anupam0401/Checkers-AI/blob/master/Checkers-AI%20Report.pdf[/embed]
+**Refer to this report for detailed information on the project:** [embed]https://github.com/Anupam0401/Checkers-AI/blob/master/Checkers-AI%20Report.pdf[/embed]
 
