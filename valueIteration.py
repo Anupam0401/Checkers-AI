@@ -4,6 +4,8 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from copy import deepcopy
 import json
+import datetime
+
 
 ##COLORS##
 #             R    G    B
@@ -48,8 +50,6 @@ def value_iteration():
         max_diff = 0  # Initialize max difference
         V_new = deepcopy(V_initial)
         for s in states:
-            # print(type(s))
-            # s.repr_matrix()
             max_val = 0
             game = checkers.Game(loop_mode=False)
             game.setup()
@@ -80,10 +80,8 @@ def value_iteration():
                         val += (1.0/len(opponent_moves)) * (
                             gamma * V[s_next.getMatrixAsTuple()]
                         )  # Add discounted downstream values
-
                 # Store value best action so far
                 max_val = max(max_val, val)
-                # print(val, max_val)
                 # Update best policy
                 if V[s.getMatrixAsTuple()] < val:
                     pi[s.getMatrixAsTuple()] = move  # Store action with highest value
@@ -104,25 +102,16 @@ def value_iteration():
         for key in pi:
             pi_str[str(key)] = str(pi[key])
 
-        # add the data of V to a file in JSON format by clearing the file and appending the data on each iteration 
-        with open('value_iteration_data.txt', 'w') as f:
-            f.write(str(V_str) + '\n')
-            
-        with open("value_iteration_data.json", "w") as outfile:
+        current_time = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+
+        # add the data of V to a file in JSON format
+        with open(f'value_data/value_itr_data_{current_time}.json', "w") as outfile:
             json.dump(V_str, outfile)
 
-        # add the data of pi to a file
-        with open('policy_iteration_data.txt', 'w') as f:
-            f.write(str(pi_str )+ '\n')
-
-        with open("policy_iteration_data.json", "w") as outfile:
+        with open(f'policy_data/policy_itr_data_{current_time}.json', "w") as outfile:
             json.dump(pi_str, outfile)
 
-        # generate heatmap
-        # sns.heatmap(V, annot=True, fmt='.2f', cmap='Blues')
-        # plt.show()
         print("Iteration: ", i, ">> Max diff: ", max_diff)
-
 
         # If diff smaller than threshold delta for all states, algorithm terminates
         if max_diff < delta:

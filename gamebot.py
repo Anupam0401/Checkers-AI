@@ -28,7 +28,7 @@ SOUTHEAST = "southeast"
 
 
 class Bot:
-    def __init__(self, game, color, method='random', mid_eval=None, end_eval=None, depth=1):
+    def __init__(self, game, color, method='random', mid_eval=None, end_eval=None, depth=1, file_name = 'policy.json'):
         self.method = method
         if mid_eval == 'piece2val':
             self._mid_eval = self._piece2val
@@ -56,10 +56,11 @@ class Bot:
         self._end_eval_time = False
         self._count_nodes = 0
         self.policy = {}
-        self._load_policy()
+        if self.method == 'policy_iteration':
+            self._load_policy(file_name)
 
-    def _load_policy(self):
-        with open('policy_iteration_data.json') as json_file:
+    def _load_policy(self, file_name):
+        with open(file_name) as json_file:
             temp = json.load(json_file)
         
         # "(('X', 'X', 'KB', 'X'), ('X', 'KR', 'X', 'KR'), ('B', 'X', 'X', 'X'), ('X', 'X', 'X', 'X'))": 'None'
@@ -305,10 +306,10 @@ class Bot:
 
     def _mdp_step(self,board):
         if board.getMatrixAsTuple() not in self.policy or self.policy[board.getMatrixAsTuple()] == None:
-            print("Using Random")
+            # print("Using Random")
             self._random_step(board)
         else:
-            print("Using Policy")
+            # print("Using Policy")
             self._action(self.policy[board.getMatrixAsTuple()][0], self.policy[board.getMatrixAsTuple()][1], board)
         return
     

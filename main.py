@@ -24,7 +24,7 @@ def main():
         bot = gamebot.Bot(game, RED, mid_eval='piece_and_board',
                           end_eval='sum_of_dist', method='alpha_beta', depth=3)
         random_bot_blue = gamebot.Bot(
-            game, BLUE, mid_eval='piece_and_board_pov', method='policy_iteration', depth=3, end_eval='sum_of_dist')
+            game, BLUE, mid_eval='piece_and_board_pov', method='policy_iteration', depth=3, end_eval='sum_of_dist',file_name= 'policy_data/policy_itr_data_2023-04-29_12-20-28.json')
         while True:  # main game loop
             if game.turn == BLUE:
                  # TO start player's turn uncomment the below line and comment a couple  of line below than that
