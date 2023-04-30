@@ -22,7 +22,7 @@ python main.py
 
 ## References
 
-This repos has been taken from the [Droughts-AI repo](https://github.com/Hsankesara/Draughts-AI), and been modified to implement the Markov Decision process algorithm for implementing the AI.
+This repository has been taken from the [Droughts-AI repo](https://github.com/Hsankesara/Draughts-AI), and been modified to implement the Markov Decision process algorithm for implementing the AI.
 
 ## Contributing
 
